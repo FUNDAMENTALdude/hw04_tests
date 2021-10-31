@@ -1,0 +1,32 @@
+{% extends 'base.html' %} 
+
+{% block title %}
+  Записи сообщества {{ page_odj.group.title }}
+{% endblock %}
+
+{% block content %} 
+  <!-- класс py-5 создает отступы сверху и снизу блока -->
+  <div class="container">
+    <h1>{{ group.title }}</h1>
+    <p>{{group.description}}</p>
+    {% for post in page_obj %}
+      <article>
+        <ul>
+          <li>
+            Автор: {{ post.author.get_full_name }}
+            <a href={% url "posts:profile" post.author %}>все посты пользователя</a>
+          </li>
+          <li>
+            Дата публикации: {{ post.pub_date|date:"d E Y" }}
+          </li>
+        </ul>
+        <p>{{ post.text }}</p>
+        <a href="{% url 'posts:post_detail' post.pk %}">подробная информация </a>
+      </article>
+      <a href="{% url "posts:group_posts" post.group.slug %}">все записи группы</a>
+      {% if not forloop.last %}<hr>{% endif %}
+    {% endfor %}
+    {% include 'posts/includes/paginator.html' %}
+  </div> 
+{% endblock %} 
+
