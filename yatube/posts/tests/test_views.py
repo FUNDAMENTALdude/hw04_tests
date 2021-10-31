@@ -133,12 +133,10 @@ class PostViewsTest(TestCase):
     def test_index_pages_show_correct_context(self):
         response = self.authorized_client.get(reverse('posts:index'))
         first_obj = response.context['page_obj'][1]
-        post_text_0 = first_obj.text
-        post_group_0 = first_obj.group
-        post_user_0 = first_obj.author
-        self.assertEqual(post_user_0, PostViewsTest.user)
-        self.assertEqual(post_text_0, 'text0')
-        self.assertEqual(post_group_0, PostViewsTest.group)
+        post_text_1 = first_obj.text
+        post_user_1 = first_obj.author
+        self.assertEqual(post_user_1, PostViewsTest.user)
+        self.assertEqual(post_text_1, 'text1')
 
     def test_group_posts_pages_show_correct_context(self):
         response = self.authorized_client.get(reverse('posts:group_posts',
