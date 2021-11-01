@@ -48,10 +48,6 @@ class PostURLResponseTests(TestCase):
         response = self.guest_client.get(f'/posts/{pk}/')
         self.assertEqual(response.status_code, 200)
 
-    def test_unexisting_page(self):
-        response = self.guest_client.get('/unexisting_page/')
-        self.assertEqual(response.status_code, 404)
-
     def test_post_create_url_exists_at_desired_location_authorized(self):
         response = self.authorized_client.get('/create/')
         self.assertEqual(response.status_code, 200)
