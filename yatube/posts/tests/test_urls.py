@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+from django.urls.base import reverse
 from ..models import Post, User, Group
 
 
@@ -21,53 +22,55 @@ class PostURLResponseTests(TestCase):
         self.authorized_client.force_login(PostURLResponseTests.user)
 
     def test_homepage_url_exists_at_desired_location(self):
-        response = self.guest_client.get('/')
+        response = self.guest_client.get(reverse('posts:index'))
         # Утверждаем, что для прохождения теста код должен быть равен 200
         self.assertEqual(response.status_code, 200)
 
     def test_about_tech_url_exists_at_desired_location(self):
-        response = self.guest_client.get('/about/tech/')
+        response = self.guest_client.get(reverse('about:tech'))
         self.assertEqual(response.status_code, 200)
 
     def test_about_author_url_exists_at_desired_location(self):
-        response = self.guest_client.get('/about/author/')
+        response = self.guest_client.get(reverse('about:author'))
         self.assertEqual(response.status_code, 200)
-
-    def test_unexisting_page(self):
-        response = self.guest_client.get('/unexisting_page/')
-        self.assertEqual(response.status_code, 404)
 
     def test_group_posts_url_exists_at_desired_location(self):
         slug = PostURLResponseTests.group.slug
-        response = self.guest_client.get(f'/group/{slug}/')
+        response = self.guest_client.get(reverse('posts:group_posts',
+                                                 kwargs={'slug': slug}))
         self.assertEqual(response.status_code, 200)
 
     def test_profile_url_exists_at_desired_location(self):
         username = PostURLResponseTests.user.username
-        response = self.guest_client.get(f'/profile/{username}/')
+        response = self.guest_client.get(reverse('posts:profile',
+                                                 kwargs={'username':
+                                                         username}))
         self.assertEqual(response.status_code, 200)
 
     def test_post_detail_url_exists_at_desired_location(self):
         pk = PostURLResponseTests.post.pk
-        response = self.guest_client.get(f'/posts/{pk}/')
+        response = self.guest_client.get(reverse('posts:post_detail',
+                                                 kwargs={'post_id': pk}))
         self.assertEqual(response.status_code, 200)
 
     def test_post_create_url_exists_at_desired_location_authorized(self):
-        response = self.authorized_client.get('/create/')
+        response = self.authorized_client.get(reverse('posts:post_create'))
         self.assertEqual(response.status_code, 200)
 
     def test_post_edit_url_exists_desired_location_author(self):
         pk = PostURLResponseTests.post.pk
-        response = self.authorized_client.get(f'/posts/{pk}/edit/')
+        response = self.authorized_client.get(reverse('posts:post_edit',
+                                              kwargs={'post_id': pk}))
         self.assertEqual(response.status_code, 200)
 
     def test_post_create_url_exists_at_desired_location_anonymous(self):
-        response = self.guest_client.get('/create/')
+        response = self.guest_client.get(reverse('posts:post_create'))
         self.assertRedirects(response, '/auth/login/?next=/create/')
 
     def test_post_edit_url_exists_at_desired_location_anonymous(self):
         pk = PostURLResponseTests.post.pk
-        response = self.guest_client.get(f'/posts/{pk}/edit/')
+        response = self.guest_client.get(reverse('posts:post_edit',
+                                         kwargs={'post_id': pk}))
         self.assertRedirects(response, f'/posts/{pk}/')
 
 

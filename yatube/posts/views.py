@@ -7,18 +7,9 @@ from django.contrib.auth.decorators import login_required
 
 def index(request):
     post_list = Post.objects.all()
-    # Если порядок сортировки определен в классе Meta модели,
-    # запрос будет выглядить так:
-    # post_list = Post.objects.all()
-    # Показывать по 10 записей на странице.
     paginator = Paginator(post_list, 10)
-
-    # Из URL извлекаем номер запрошенной страницы - это значение параметра page
     page_number = request.GET.get('page')
-
-    # Получаем набор записей для страницы с запрошенным номером
     page_obj = paginator.get_page(page_number)
-    # Отдаем в словаре контекста
     context = {
         'page_obj': page_obj,
     }
@@ -40,14 +31,12 @@ def group_posts(request, slug):
 
 
 def profile(request, username):
-    # Здесь код запроса к модели и создание словаря контекста
     user = get_object_or_404(User, username=username)
     post_list = user.posts.all()
     paginator = Paginator(post_list, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     num = post_list.count()
-    # Отдаем в словаре контекста
     context = {
         "page_obj": page_obj,
         "num": num,
@@ -57,7 +46,6 @@ def profile(request, username):
 
 
 def post_detail(request, post_id):
-    # Здесь код запроса к модели и создание словаря контекста
     post = get_object_or_404(Post, pk=post_id)
     author_all_posts = post.author.posts.all()
     num_of_posts = author_all_posts.count()

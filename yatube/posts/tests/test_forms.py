@@ -56,7 +56,7 @@ class PostFormTests(TestCase):
         self.assertRedirects(response,
                              reverse('posts:post_detail',
                                      kwargs={'post_id':
-                                             f'{PostFormTests.post.pk}'}))
+                                             PostFormTests.post.pk}))
         self.assertEqual(posts_count, Post.objects.count())
 
         self.assertTrue(Post.objects.filter(text='text3').exists())
