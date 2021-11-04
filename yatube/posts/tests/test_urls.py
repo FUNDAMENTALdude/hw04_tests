@@ -34,6 +34,10 @@ class PostURLResponseTests(TestCase):
         response = self.guest_client.get(reverse('about:author'))
         self.assertEqual(response.status_code, 200)
 
+    def test_unexisting_page(self):
+        response = self.guest_client.get('/unexisting_page/')
+        self.assertEqual(response.status_code, 404)
+
     def test_group_posts_url_exists_at_desired_location(self):
         slug = PostURLResponseTests.group.slug
         response = self.guest_client.get(reverse('posts:group_posts',
